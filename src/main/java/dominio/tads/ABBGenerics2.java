@@ -1,6 +1,6 @@
-package dominio;
+package dominio.tads;
 
-public class ABBGenerics<T extends ObjetoComparable<T>> {
+public class ABBGenerics2<T extends Comparable<T>> {
 
     private class NodoABBGeneric {
         private T dato;
@@ -26,9 +26,9 @@ public class ABBGenerics<T extends ObjetoComparable<T>> {
 
     public boolean existe(NodoABBGeneric nodo, T datoBuscar) {
         if (nodo == null) return false;
-        else if (datoBuscar.esMayor(nodo.dato)) return existe(nodo.der, datoBuscar);
-        else if (datoBuscar.esMenor(nodo.dato)) return existe(nodo.izq, datoBuscar);
-        else return true;
+        else if (datoBuscar.equals(nodo.dato)) return true;
+        else if (datoBuscar.compareTo(nodo.dato) > 0) return existe(nodo.der, datoBuscar);
+        else return existe(nodo.izq, datoBuscar);
     }
 
     public void imprimirOrdenado() {
@@ -46,14 +46,15 @@ public class ABBGenerics<T extends ObjetoComparable<T>> {
     private NodoABBGeneric agregar(NodoABBGeneric nodo, T datoAgregar) {
         if (nodo == null) {
             return new NodoABBGeneric(datoAgregar);
-        } else if (datoAgregar.esMayor(nodo.dato)) {
+
+        } else if (nodo.dato.equals(datoAgregar)) throw new RuntimeException("Duplicado");
+
+        else if (datoAgregar.compareTo(nodo.dato) > 0) {
             nodo.der = agregar(nodo.der, datoAgregar);
             return nodo;
-        } else if (datoAgregar.esMenor(nodo.dato)) {
+        } else {
             nodo.izq = agregar(nodo.izq, datoAgregar);
             return nodo;
-        } else {
-            throw new RuntimeException("Duplicado");
         }
     }
 

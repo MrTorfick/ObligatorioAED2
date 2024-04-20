@@ -1,4 +1,4 @@
-package dominio;
+package dominio.tads;
 
 import java.util.Date;
 import java.util.Objects;

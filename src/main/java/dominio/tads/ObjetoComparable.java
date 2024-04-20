@@ -1,4 +1,4 @@
-package dominio;
+package dominio.tads;
 
 public interface ObjetoComparable<T> extends Comparable<T> {
 
