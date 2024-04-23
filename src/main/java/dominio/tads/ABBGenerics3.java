@@ -31,7 +31,7 @@ public class ABBGenerics3<T> {
         return existe(raiz, cascaron);
     }
 
-    public boolean existe(NodoABBGeneric nodo, T datoBuscar) {
+    private boolean existe(NodoABBGeneric nodo, T datoBuscar) {
         if (nodo == null) return false;
         else if (datoBuscar.equals(nodo.dato)) return true;
         else if (comparador.compare(datoBuscar, nodo.dato) > 0) return existe(nodo.der, datoBuscar);
