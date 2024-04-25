@@ -11,8 +11,8 @@ public class ImplementacionSistema implements Sistema {
     int maxAerolineas = 0;
 
     ABBGenerics3<Pasajero> arbolPasajeros = new ABBGenerics3<>((p1, p2) -> {
-        int cedula1 = Integer.parseInt(p1.getCedula());
-        int cedula2 = Integer.parseInt(p2.getCedula());
+        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));//Cualquier caracter que no este entre 0-9, eliminado
+        int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);//Si cedula1 es mayor que cedula2, devuelve 1, si es menor devuelve -1, si son iguales devuelve 0
     });
 
@@ -35,9 +35,10 @@ public class ImplementacionSistema implements Sistema {
             return Retorno.error1("Debe ingresar todos los datos");
 
 
-        String regex = "^([1-9]{1})[.-]?(\\d{3})[.-]?(\\d{3})[.-]?(\\d{1})$";//TODO: ESTA MAL, QUEDA PENDIENTE ESTO
+        String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
+        String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
 
-        if (!cedula.matches(regex))
+        if (!cedula.matches(primerFormato) && !cedula.matches(segundoFormato))
             return Retorno.error2("La cedula no tiene un formato valido");
 
         Pasajero p = new Pasajero(cedula, nombre, telefono, categoria);

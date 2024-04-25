@@ -2,6 +2,8 @@ package dominio.clases;
 
 import interfaz.Categoria;
 
+import java.util.Objects;
+
 public class Pasajero {
 
     private String cedula;
@@ -54,5 +56,18 @@ public class Pasajero {
 
     public boolean validarCedula() {
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pasajero pasajero = (Pasajero) o;
+        return Objects.equals(cedula, pasajero.cedula);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(cedula);
     }
 }
