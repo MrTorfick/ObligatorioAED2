@@ -1,6 +1,7 @@
 package sistema;
 
 import dominio.clases.Pasajero;
+import dominio.clases.ResultadoBusqueda;
 import dominio.tads.ABBGenerics3;
 import interfaz.*;
 
@@ -27,6 +28,15 @@ public class ImplementacionSistema implements Sistema {
         return Retorno.ok();
     }
 
+    private boolean validarCedula(String cedula) {
+        String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
+        String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
+
+        if (!cedula.matches(primerFormato) && !cedula.matches(segundoFormato))
+            return false;
+        return true;
+    }
+
     @Override
     public Retorno registrarPasajero(String cedula, String nombre, String telefono, Categoria categoria) {
 
@@ -35,10 +45,7 @@ public class ImplementacionSistema implements Sistema {
             return Retorno.error1("Debe ingresar todos los datos");
 
 
-        String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
-        String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
-
-        if (!cedula.matches(primerFormato) && !cedula.matches(segundoFormato))
+        if (!validarCedula(cedula))
             return Retorno.error2("La cedula no tiene un formato valido");
 
         Pasajero p = new Pasajero(cedula, nombre, telefono, categoria);
@@ -51,7 +58,20 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno buscarPasajero(String cedula) {
-        return Retorno.noImplementada();
+
+        if (Objects.isNull(cedula) || cedula.trim().isEmpty())
+            return Retorno.error1("La cedula no tiene que ser vacia o nula");
+
+        if (!validarCedula(cedula))
+            return Retorno.error2("La cedula no tiene un formato valido");
+
+        ResultadoBusqueda<Pasajero> retornar = arbolPasajeros.obtener(new Pasajero(cedula));
+        if (retornar.getDato() == null) {
+            return Retorno.error3("No se encontro un pasajero con la cedula ingresada");
+        }
+
+
+        return Retorno.ok(retornar.getNodosVisitados(), retornar.getDato().toString());
     }
 
     @Override

@@ -70,4 +70,9 @@ public class Pasajero {
     public int hashCode() {
         return Objects.hashCode(cedula);
     }
+
+    @Override
+    public String toString() {
+        return cedula + ";" + nombre + ";" + telefono + ";" + categoria.getTexto();
+    }
 }

@@ -1,6 +1,9 @@
 package dominio.tads;
 
+import dominio.clases.ResultadoBusqueda;
+
 import java.util.Comparator;
+import java.util.Objects;
 
 public class ABBGenerics3<T> {
 
@@ -37,6 +40,42 @@ public class ABBGenerics3<T> {
         else if (comparador.compare(datoBuscar, nodo.dato) > 0) return existe(nodo.der, datoBuscar);
         else return existe(nodo.izq, datoBuscar);
     }
+
+
+    public ResultadoBusqueda<T> obtener(T cascaron) {
+        return obtener(raiz, cascaron, 0);
+    }
+
+    private ResultadoBusqueda<T> obtener(NodoABBGeneric nodo, T datoBuscar, int nodosVisitados) {
+        if (nodo == null) {
+            return new ResultadoBusqueda<>(null, nodosVisitados);
+        }
+        if (datoBuscar.equals(nodo.dato)) {
+            return new ResultadoBusqueda<>(nodo.dato, nodosVisitados);
+        } else if (comparador.compare(datoBuscar, nodo.dato) > 0) {
+            ResultadoBusqueda<T> resultado = obtener(nodo.der, datoBuscar, nodosVisitados++);
+            resultado.setNodosVisitados(resultado.getNodosVisitados() + nodosVisitados);
+            return resultado;
+        } else {
+            ResultadoBusqueda<T> resultado = obtener(nodo.izq, datoBuscar, nodosVisitados++);
+            resultado.setNodosVisitados(resultado.getNodosVisitados() + nodosVisitados);
+            return resultado;
+        }
+    }
+
+    /*
+    public T obtener(T cascaron) {
+        return obtener(raiz, cascaron);
+    }
+
+    private T obtener(NodoABBGeneric nodo, T datoBuscar) {
+        if (nodo == null) return null;
+        else if (datoBuscar.equals(nodo.dato)) return nodo.dato;
+        else if (comparador.compare(datoBuscar, nodo.dato) > 0) return obtener(nodo.der, datoBuscar);
+        else return obtener(nodo.izq, datoBuscar);
+    }
+    */
+
 
     public void imprimirOrdenado() {
         imprimirOrdenado(raiz);
