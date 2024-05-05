@@ -2,19 +2,34 @@ package sistema;
 
 import dominio.clases.Pasajero;
 import dominio.clases.ResultadoBusqueda;
+import dominio.excepciones.CedulaInvalidaException;
+import dominio.excepciones.DatosPasajeroException;
 import dominio.tads.ABBGenerics3;
 import interfaz.*;
-
-import java.util.Objects;
 
 public class ImplementacionSistema implements Sistema {
     int maxAeropuertos = 0;
     int maxAerolineas = 0;
 
-    ABBGenerics3<Pasajero> arbolPasajeros = new ABBGenerics3<>((p1, p2) -> {
+    ABBGenerics3<Pasajero> arbolPasajerosGeneral = new ABBGenerics3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));//Cualquier caracter que no este entre 0-9, eliminado
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);//Si cedula1 es mayor que cedula2, devuelve 1, si es menor devuelve -1, si son iguales devuelve 0
+    });
+    ABBGenerics3<Pasajero> arbolPasajerosCategoriaPlatino = new ABBGenerics3<>((p1, p2) -> {
+        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
+        int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
+        return Integer.compare(cedula1, cedula2);
+    });
+    ABBGenerics3<Pasajero> arbolPasajerosCategoriaFrecuente = new ABBGenerics3<>((p1, p2) -> {
+        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
+        int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
+        return Integer.compare(cedula1, cedula2);
+    });
+    ABBGenerics3<Pasajero> arbolPasajerosCategoriaEstandar = new ABBGenerics3<>((p1, p2) -> {
+        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
+        int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
+        return Integer.compare(cedula1, cedula2);
     });
 
     @Override
@@ -29,6 +44,7 @@ public class ImplementacionSistema implements Sistema {
     }
 
     private boolean validarCedula(String cedula) {
+
         String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
         String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
 
@@ -39,33 +55,50 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno registrarPasajero(String cedula, String nombre, String telefono, Categoria categoria) {
+        try {
+            Pasajero p = new Pasajero(cedula, nombre, telefono, categoria);
+            p.validar();
 
-        if (Objects.isNull(cedula) || Objects.isNull(nombre) || Objects.isNull(telefono) || Objects.isNull(categoria)
-                || cedula.trim().isEmpty() || nombre.trim().isEmpty() || telefono.trim().isEmpty())
-            return Retorno.error1("Debe ingresar todos los datos");
+            if (arbolPasajerosGeneral.existe(p))
+                return Retorno.error3("Ya existe un pasajero registrado con esa cedula");
+
+            arbolPasajerosGeneral.agregar(p);//Puede tirar excepcion
+            switch (categoria.getIndice()) {
+                case 0:
+                    arbolPasajerosCategoriaPlatino.agregar(p);
+                    break;
+                case 1:
+                    arbolPasajerosCategoriaFrecuente.agregar(p);
+                    break;
+                case 2:
+                    arbolPasajerosCategoriaEstandar.agregar(p);
+                    break;
+            }
+
+            return Retorno.ok();
+
+        } catch (CedulaInvalidaException e) {
+            return Retorno.error2(e.getMessage());
+        } catch (DatosPasajeroException e) {
+            return Retorno.error1(e.getMessage());
+        }
 
 
-        if (!validarCedula(cedula))
-            return Retorno.error2("La cedula no tiene un formato valido");
-
-        Pasajero p = new Pasajero(cedula, nombre, telefono, categoria);
-        if (arbolPasajeros.existe(p))
-            return Retorno.error3("Ya existe un pasajero registrado con esa cedula");
-
-        arbolPasajeros.agregar(p);//Puede tirar excepcion
-        return Retorno.ok();
     }
 
     @Override
     public Retorno buscarPasajero(String cedula) {
 
-        if (Objects.isNull(cedula) || cedula.trim().isEmpty())
-            return Retorno.error1("La cedula no tiene que ser vacia o nula");
-
-        if (!validarCedula(cedula))
+        try {
+            Pasajero p = new Pasajero(cedula);
+            p.validarCedula();
+        } catch (CedulaInvalidaException e) {
+            return Retorno.error1("La cedula es vacia o nula");
+        } catch (DatosPasajeroException e) {
             return Retorno.error2("La cedula no tiene un formato valido");
+        }
 
-        ResultadoBusqueda<Pasajero> retornar = arbolPasajeros.obtener(new Pasajero(cedula));
+        ResultadoBusqueda<Pasajero> retornar = arbolPasajerosGeneral.obtener(new Pasajero(cedula));
         if (retornar.getDato() == null) {
             return Retorno.error3("No se encontro un pasajero con la cedula ingresada");
         }
@@ -76,11 +109,25 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno listarPasajerosAscendente() {
-        return Retorno.noImplementada();
+        String lista = arbolPasajerosGeneral.inOrder();
+        return Retorno.ok(lista);
     }
 
     @Override
     public Retorno listarPasajerosPorCategoria(Categoria categoria) {
+        String lista = "";
+        switch (categoria.getIndice()) {
+            case 0:
+                lista = arbolPasajerosCategoriaPlatino.inOrder();
+                return Retorno.ok(lista);
+
+            case 1:
+                lista = arbolPasajerosCategoriaFrecuente.inOrder();
+                return Retorno.ok(lista);
+            case 2:
+                lista = arbolPasajerosCategoriaEstandar.inOrder();
+                return Retorno.ok(lista);
+        }
         return Retorno.noImplementada();
     }
 

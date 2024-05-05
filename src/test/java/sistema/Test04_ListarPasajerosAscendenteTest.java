@@ -2,14 +2,14 @@ package sistema;
 
 import interfaz.Categoria;
 import interfaz.Retorno;
+import interfaz.Retorno.Resultado;
 import interfaz.Sistema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sistema.ImplementacionSistema;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListarPasajerosAscendenteTest {
+public class Test04_ListarPasajerosAscendenteTest {
     Sistema sistema;
     Retorno retorno;
 
@@ -28,6 +28,7 @@ public class ListarPasajerosAscendenteTest {
     void listarAscendente() {
         retorno = sistema.listarPasajerosAscendente();
         String resEsperado = "4.685.375-3;Juliana;1234;Estándar|5.135.139-2;Gaston;3456;Platino|5.447.365-1;Gustavo;23456;Estándar|5.888.365-4;Alejandra;5634;Frecuente";
+        assertEquals(Resultado.OK, retorno.getResultado());
         assertEquals(resEsperado, retorno.getValorString());
     }
 
@@ -36,6 +37,7 @@ public class ListarPasajerosAscendenteTest {
         sistema = new ImplementacionSistema();
         sistema.inicializarSistema(10,10);
         retorno = sistema.listarPasajerosAscendente();
+        assertEquals(Resultado.OK, retorno.getResultado());
         assertEquals("", retorno.getValorString());
     }
 }

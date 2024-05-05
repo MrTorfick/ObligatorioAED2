@@ -3,11 +3,10 @@ package sistema;
 import interfaz.Retorno;
 import interfaz.Sistema;
 import org.junit.jupiter.api.Test;
-import sistema.ImplementacionSistema;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InicializarSistemaTest {
+public class Test01_InicializarSistemaTest {
     Retorno retorno;
 
     @Test

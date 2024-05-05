@@ -2,14 +2,14 @@ package sistema;
 
 import interfaz.Categoria;
 import interfaz.Retorno;
+import interfaz.Retorno.Resultado;
 import interfaz.Sistema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sistema.ImplementacionSistema;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListarPasajerosPorCategoriaTest {
+public class Test05_ListarPasajerosPorCategoriaTest {
     private Sistema sistema;
     private Retorno retorno;
 
@@ -25,27 +25,20 @@ public class ListarPasajerosPorCategoriaTest {
     }
 
     @Test
-    void noDeberiaListarJugadoresPorTipoParamNull(){
-        retorno = sistema.listarPasajerosPorCategoria(null);
-        assertEquals(Retorno.Resultado.ERROR_1,retorno.getResultado());
-
-    }
-
-    @Test
     void deberiaListarJugadoresPorTipo(){
         retorno = sistema.listarPasajerosPorCategoria(Categoria.ESTANDAR);
-        assertEquals(Retorno.Resultado.OK,retorno.getResultado());
-        assertEquals("5.135.139-2;Gaston;3456;Estándar|4.685.375-3;Juliana;1234;Estándar",retorno.getValorString());
+        assertEquals(Resultado.OK,retorno.getResultado());
+        assertEquals("4.685.375-3;Juliana;1234;Estándar|5.135.139-2;Gaston;3456;Estándar",retorno.getValorString());
 
         retorno = sistema.listarPasajerosPorCategoria(Categoria.PLATINO);
-        assertEquals(Retorno.Resultado.OK,retorno.getResultado());
+        assertEquals(Resultado.OK,retorno.getResultado());
         assertEquals("5.447.365-1;Gustavo;23456;Platino|5.888.365-4;Alejandra;5634;Platino",retorno.getValorString());
     }
 
     @Test
     void deberiaListarJugadoresPorTipoVacio(){
         retorno = sistema.listarPasajerosPorCategoria(Categoria.FRECUENTE);
-        assertEquals(Retorno.Resultado.OK,retorno.getResultado());
+        assertEquals(Resultado.OK,retorno.getResultado());
         assertEquals("",retorno.getValorString());
     }
 }

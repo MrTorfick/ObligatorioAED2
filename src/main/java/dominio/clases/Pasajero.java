@@ -1,5 +1,7 @@
 package dominio.clases;
 
+import dominio.excepciones.CedulaInvalidaException;
+import dominio.excepciones.DatosPasajeroException;
 import interfaz.Categoria;
 
 import java.util.Objects;
@@ -54,8 +56,39 @@ public class Pasajero {
         this.categoria = categoria;
     }
 
-    public boolean validarCedula() {
-        return false;
+    private void validarCategoria() throws DatosPasajeroException {
+        if(Objects.isNull(categoria))
+            throw new DatosPasajeroException("La categoria no es valida");
+    }
+
+    private void validarTelefono() throws DatosPasajeroException {
+        if (Objects.isNull(telefono)||telefono.trim().isEmpty())
+            throw new DatosPasajeroException("El telefono no es valido");
+    }
+
+    private void validarNombre() throws DatosPasajeroException {
+        if (Objects.isNull(nombre)||nombre.trim().isEmpty())
+            throw new DatosPasajeroException("El nombre no es valido");
+
+    }
+
+    public void validarCedula() throws CedulaInvalidaException, DatosPasajeroException {
+
+        if(Objects.isNull(cedula)||cedula.trim().isEmpty())
+            throw new DatosPasajeroException("La cedula no puede ser nula o vacia");
+
+        String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
+        String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
+
+        if (!cedula.matches(primerFormato) && !cedula.matches(segundoFormato))
+            throw new CedulaInvalidaException("La cedula no tiene un formato valido");
+    }
+
+    public void validar() throws CedulaInvalidaException, DatosPasajeroException {
+        validarCategoria();
+        validarNombre();
+        validarTelefono();
+        validarCedula();
     }
 
     @Override

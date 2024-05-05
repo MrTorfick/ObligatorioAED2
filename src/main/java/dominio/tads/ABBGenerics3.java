@@ -76,7 +76,7 @@ public class ABBGenerics3<T> {
     }
     */
 
-
+    /*
     public void imprimirOrdenado() {
         imprimirOrdenado(raiz);
     }
@@ -88,6 +88,8 @@ public class ABBGenerics3<T> {
         System.out.print(",");
         imprimirOrdenado(nodo.der);
     }
+
+     */
 
     private NodoABBGeneric agregar(NodoABBGeneric nodo, T datoAgregar) {
         if (nodo == null) {
@@ -101,6 +103,25 @@ public class ABBGenerics3<T> {
         } else {
             nodo.izq = agregar(nodo.izq, datoAgregar);
             return nodo;
+        }
+    }
+
+    public String inOrder(){
+        StringBuilder sb = new StringBuilder();
+        inOrderRec(raiz, sb);
+        if(!sb.isEmpty()){
+            sb.deleteCharAt(sb.length()-1);//Quitar barra final
+        }
+
+        return sb.toString();
+    }
+
+    private void inOrderRec(NodoABBGeneric nodoActual, StringBuilder sb) {
+        if(nodoActual !=null){
+            inOrderRec(nodoActual.izq,sb);
+            sb.append(nodoActual.dato.toString()).append("|");
+            //System.out.printf("%s", nodoActual.dato.);
+            inOrderRec(nodoActual.der, sb);
         }
     }
 
