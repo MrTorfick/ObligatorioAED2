@@ -1,6 +1,7 @@
 package sistema;
 
 import dominio.clases.Aerolinea;
+import dominio.clases.Aeropuerto;
 import dominio.clases.Pasajero;
 import dominio.clases.ResultadoBusqueda;
 import dominio.excepciones.CedulaInvalidaException;
@@ -34,6 +35,12 @@ public class ImplementacionSistema implements Sistema {
     });
 
     ABBGenerics3<Aerolinea> arbolAerolineasGeneral = new ABBGenerics3<>((p1, p2) -> {
+        String codigo1 = p1.getCodigo();
+        String codigo2 = p2.getCodigo();
+        return codigo1.compareTo(codigo2);
+    });
+
+    ABBGenerics3<Aeropuerto> arbolAeropuertosGeneral = new ABBGenerics3<>((p1, p2) -> {
         String codigo1 = p1.getCodigo();
         String codigo2 = p2.getCodigo();
         return codigo1.compareTo(codigo2);
@@ -171,7 +178,25 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno registrarAeropuerto(String codigo, String nombre) {
-        return Retorno.noImplementada();
+
+        if (arbolAeropuertosGeneral.cantNodos()==maxAeropuertos)
+            return Retorno.error1("Se alcanzo la cantidad maxima de Aeropuertos");
+
+
+        Aeropuerto a = new Aeropuerto(codigo, nombre);
+        try {
+            a.validar();
+        } catch (DatosInvalidosException e) {
+            return Retorno.error2(e.getMessage());
+        }
+
+        if (arbolAeropuertosGeneral.existe(a))
+            return Retorno.error3("Ya existe una aeropuerto con ese codigo");
+
+        arbolAeropuertosGeneral.agregar(a);
+
+        return Retorno.ok();
+
     }
 
     @Override
