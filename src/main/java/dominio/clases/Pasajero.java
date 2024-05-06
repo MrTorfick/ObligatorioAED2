@@ -1,7 +1,7 @@
 package dominio.clases;
 
 import dominio.excepciones.CedulaInvalidaException;
-import dominio.excepciones.DatosPasajeroException;
+import dominio.excepciones.DatosInvalidosException;
 import interfaz.Categoria;
 
 import java.util.Objects;
@@ -56,26 +56,26 @@ public class Pasajero {
         this.categoria = categoria;
     }
 
-    private void validarCategoria() throws DatosPasajeroException {
+    private void validarCategoria() throws DatosInvalidosException {
         if(Objects.isNull(categoria))
-            throw new DatosPasajeroException("La categoria no es valida");
+            throw new DatosInvalidosException("La categoria no es valida");
     }
 
-    private void validarTelefono() throws DatosPasajeroException {
+    private void validarTelefono() throws DatosInvalidosException {
         if (Objects.isNull(telefono)||telefono.trim().isEmpty())
-            throw new DatosPasajeroException("El telefono no es valido");
+            throw new DatosInvalidosException("El telefono no es valido");
     }
 
-    private void validarNombre() throws DatosPasajeroException {
+    private void validarNombre() throws DatosInvalidosException {
         if (Objects.isNull(nombre)||nombre.trim().isEmpty())
-            throw new DatosPasajeroException("El nombre no es valido");
+            throw new DatosInvalidosException("El nombre no es valido");
 
     }
 
-    public void validarCedula() throws CedulaInvalidaException, DatosPasajeroException {
+    public void validarCedula() throws CedulaInvalidaException, DatosInvalidosException {
 
         if(Objects.isNull(cedula)||cedula.trim().isEmpty())
-            throw new DatosPasajeroException("La cedula no puede ser nula o vacia");
+            throw new DatosInvalidosException("La cedula no puede ser nula o vacia");
 
         String primerFormato = "^([1-9])(?:\\.?\\d{3}){2}-\\d$"; // N.NNN.NNN-N
         String segundoFormato = "^[1-9][0-9]{2}\\.[0-9]{3}-[0-9]$";// NNN.NNN-N
@@ -84,7 +84,7 @@ public class Pasajero {
             throw new CedulaInvalidaException("La cedula no tiene un formato valido");
     }
 
-    public void validar() throws CedulaInvalidaException, DatosPasajeroException {
+    public void validar() throws CedulaInvalidaException, DatosInvalidosException {
         validarCategoria();
         validarNombre();
         validarTelefono();

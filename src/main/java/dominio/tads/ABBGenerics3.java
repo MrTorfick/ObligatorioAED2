@@ -88,8 +88,22 @@ public class ABBGenerics3<T> {
         System.out.print(",");
         imprimirOrdenado(nodo.der);
     }
-
      */
+
+
+    public int cantNodos() {
+        return cantNodosRec(raiz);
+    }
+
+    private int cantNodosRec(NodoABBGeneric nodoActual) {
+        if (nodoActual == null) {
+            return 0;
+        } else {
+            int cantidadDelSubArbolIzquierdo = cantNodosRec(nodoActual.izq);
+            int cantidadDelSubArbolDer = cantNodosRec(nodoActual.der);
+            return cantidadDelSubArbolDer + cantidadDelSubArbolIzquierdo + 1;
+        }
+    }
 
     private NodoABBGeneric agregar(NodoABBGeneric nodo, T datoAgregar) {
         if (nodo == null) {
@@ -112,7 +126,6 @@ public class ABBGenerics3<T> {
         if(!sb.isEmpty()){
             sb.deleteCharAt(sb.length()-1);//Quitar barra final
         }
-
         return sb.toString();
     }
 
@@ -124,6 +137,7 @@ public class ABBGenerics3<T> {
             inOrderRec(nodoActual.der, sb);
         }
     }
+
 
 
 }

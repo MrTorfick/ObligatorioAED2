@@ -1,9 +1,10 @@
 package sistema;
 
+import dominio.clases.Aerolinea;
 import dominio.clases.Pasajero;
 import dominio.clases.ResultadoBusqueda;
 import dominio.excepciones.CedulaInvalidaException;
-import dominio.excepciones.DatosPasajeroException;
+import dominio.excepciones.DatosInvalidosException;
 import dominio.tads.ABBGenerics3;
 import interfaz.*;
 
@@ -32,6 +33,13 @@ public class ImplementacionSistema implements Sistema {
         return Integer.compare(cedula1, cedula2);
     });
 
+    ABBGenerics3<Aerolinea> arbolAerolineasGeneral = new ABBGenerics3<>((p1, p2) -> {
+        String codigo1 = p1.getCodigo();
+        String codigo2 = p2.getCodigo();
+        return codigo1.compareTo(codigo2);
+    });
+
+
     @Override
     public Retorno inicializarSistema(int maxAeropuertos, int maxAerolineas) {
         if (maxAeropuertos <= 5)
@@ -39,7 +47,8 @@ public class ImplementacionSistema implements Sistema {
 
         if (maxAerolineas <= 3)
             return Retorno.error2("La cantidad maxima de aerolineas debe ser mayor a 3");
-
+        this.maxAeropuertos=maxAeropuertos;
+        this.maxAerolineas=maxAerolineas;
         return Retorno.ok();
     }
 
@@ -79,7 +88,7 @@ public class ImplementacionSistema implements Sistema {
 
         } catch (CedulaInvalidaException e) {
             return Retorno.error2(e.getMessage());
-        } catch (DatosPasajeroException e) {
+        } catch (DatosInvalidosException e) {
             return Retorno.error1(e.getMessage());
         }
 
@@ -94,7 +103,7 @@ public class ImplementacionSistema implements Sistema {
             p.validarCedula();
         } catch (CedulaInvalidaException e) {
             return Retorno.error1("La cedula es vacia o nula");
-        } catch (DatosPasajeroException e) {
+        } catch (DatosInvalidosException e) {
             return Retorno.error2("La cedula no tiene un formato valido");
         }
 
@@ -133,7 +142,24 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno registrarAerolinea(String codigo, String nombre) {
-        return Retorno.noImplementada();
+
+        if (arbolAerolineasGeneral.cantNodos()==maxAerolineas)
+            return Retorno.error1("Se alcanzo la cantidad maxima de aerolineas");
+
+
+        Aerolinea a = new Aerolinea(codigo, nombre);
+        try {
+            a.validar();
+        } catch (DatosInvalidosException e) {
+            return Retorno.error2(e.getMessage());
+        }
+
+        if (arbolAerolineasGeneral.existe(a))
+            return Retorno.error3("Ya existe una aerolinea con ese codigo");
+
+        arbolAerolineasGeneral.agregar(a);
+
+        return Retorno.ok();
     }
 
     @Override
