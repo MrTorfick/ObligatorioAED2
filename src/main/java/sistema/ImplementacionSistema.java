@@ -164,7 +164,9 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno listarAerolineasDescendente() {
-        return Retorno.noImplementada();
+        //System.out.println(arbolAerolineasGeneral.toUrl());
+        String lista = arbolAerolineasGeneral.invertedInOrder();
+        return Retorno.ok(lista);
     }
 
     @Override

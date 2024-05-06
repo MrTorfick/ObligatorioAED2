@@ -41,6 +41,11 @@ public class ABBGenerics3<T> {
         else return existe(nodo.izq, datoBuscar);
     }
 
+    public String toUrl() {
+        return VisualizadorGraphViz.arbolBinToUrl(raiz,
+                n -> n.dato, n -> n.izq, n -> n.der);
+    }
+
 
     public ResultadoBusqueda<T> obtener(T cascaron) {
         return obtener(raiz, cascaron, 0);
@@ -137,6 +142,26 @@ public class ABBGenerics3<T> {
             inOrderRec(nodoActual.der, sb);
         }
     }
+
+    public String invertedInOrder(){
+        StringBuilder sb = new StringBuilder();
+        invertedInOrderRec(raiz, sb);
+        if(!sb.isEmpty()){
+            sb.deleteCharAt(sb.length()-1);
+        }
+        return sb.toString();
+    }
+
+    private void invertedInOrderRec(NodoABBGeneric nodoActual, StringBuilder sb) {
+        if(nodoActual !=null){
+            invertedInOrderRec(nodoActual.der,sb);
+            sb.append(nodoActual.dato.toString()).append("|");
+            invertedInOrderRec(nodoActual.izq, sb);
+        }
+    }
+
+
+
 
 
 

@@ -63,4 +63,9 @@ public class Aerolinea {
         return Objects.hashCode(codigo);
     }
 
+    @Override
+    public String toString(){
+        return codigo + ";" + nombre;
+    }
+
 }
