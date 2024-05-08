@@ -201,6 +201,9 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno registrarConexion(String codigoAeropuertoOrigen, String codigoAeropuertoDestino, double kilometros) {
+
+        //TODO
+
         return Retorno.noImplementada();
     }
 
