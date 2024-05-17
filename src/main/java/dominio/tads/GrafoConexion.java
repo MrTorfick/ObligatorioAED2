@@ -2,6 +2,8 @@ package dominio.tads;
 
 import dominio.clases.Aeropuerto;
 import dominio.clases.Conexion;
+import dominio.excepciones.DatoYaExisteException;
+import dominio.excepciones.GrafoLlenoException;
 
 public class GrafoConexion {
 
@@ -13,15 +15,43 @@ public class GrafoConexion {
     private int largoActual;
 
 
-    public GrafoConexion(int cantidadMaximaDeAerolineas) {
-        vertices = new Aeropuerto[cantidadMaximaDeAerolineas];
-        aristas = new Arista[cantidadMaximaDeAerolineas][cantidadMaximaDeAerolineas];
-        this.cantMaxVertices = cantidadMaximaDeAerolineas;
+    public GrafoConexion(int cantidadMaximaDeAeropuertos) {
+        vertices = new Aeropuerto[cantidadMaximaDeAeropuertos];
+        aristas = new Arista[cantidadMaximaDeAeropuertos][cantidadMaximaDeAeropuertos];
+        this.cantMaxVertices = cantidadMaximaDeAeropuertos;
         for (int i = 0; i < cantMaxVertices; i++) {
             for (int j = 0; j < cantMaxVertices; j++) {
                 aristas[i][j] = new Arista();
             }
         }
+    }
+
+    public boolean sonAdyacentes(Aeropuerto origen, Aeropuerto destino) {
+        int idxOrigen = this.buscarIndiceVertice(origen);//fila
+        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        if (idxOrigen < 0 || idxDestino < 0) {
+            return false;
+        }
+        return sonAdyacentes(idxOrigen, idxDestino);
+
+    }
+
+    private boolean sonAdyacentes(int idxOrigen, int idxDestino) {
+        return this.aristas[idxOrigen][idxDestino].isExiste();
+    }
+
+
+    public void registrarVertice(Aeropuerto c) throws GrafoLlenoException, DatoYaExisteException {
+        if(buscarIndiceVertice(c)==1){
+            throw new DatoYaExisteException("Ya existe el vertice en el grafo");
+        }
+
+        if(largoActual==cantMaxVertices){
+            throw new GrafoLlenoException("El grafo esta lleno");
+        }
+
+            vertices[largoActual] = c;
+            largoActual++;
     }
 
 
@@ -33,7 +63,7 @@ public class GrafoConexion {
         aristas[idxOrigen][idxDestino].setDatoConexion(conexion);
     }
 
-    private int buscarIndiceVertice(Aeropuerto aBuscarIndice) {
+    public int buscarIndiceVertice(Aeropuerto aBuscarIndice) {
 
         for (int i = 0; i < vertices.length; i++) {
             Aeropuerto c = vertices[i];
@@ -43,6 +73,5 @@ public class GrafoConexion {
         }
         return -1;
     }
-
 
 }

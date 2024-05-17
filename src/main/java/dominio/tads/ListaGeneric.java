@@ -1,7 +1,7 @@
 package dominio.tads;
 
 
-public class ListaGenerics<T extends Comparable<T>> {
+public class ListaGeneric<T> {
 
     private Nodo<T> inicio;
     private Nodo<T> fin;
@@ -45,7 +45,14 @@ public class ListaGenerics<T extends Comparable<T>> {
         }
     }
 
-    public ListaGenerics(int tope) {
+
+    public ListaGeneric() {
+        inicio = null;
+        fin = null;
+        cantElementos = 0;
+    }
+
+    public ListaGeneric(int tope) {
         inicio = null;
         fin = null;
         cantElementos = 0;
@@ -125,9 +132,10 @@ public class ListaGenerics<T extends Comparable<T>> {
     }
 
 
-    public void borrarInicio() {
+    public T borrarInicio() {
 
         if (!esVacia()) {
+            T dato = inicio.getDato();
             if (cantElementos == 1) {
                 vaciar();
             } else {
@@ -137,9 +145,9 @@ public class ListaGenerics<T extends Comparable<T>> {
                 inicio.setAnterior(null);
                 cantElementos--;
             }
-
+            return dato;
         }
-
+        return null;
     }
 
 

@@ -2,17 +2,18 @@ package dominio.clases;
 
 public class Conexion {
 
-    private String codigoAeropuertoOrigen;
-    private String codigoAeropuertoDestino;
+    //private String codigoAeropuertoOrigen;
+    //private String codigoAeropuertoDestino;
     private double kilometros;
+    //TODO: LISTA DE VUELOS
 
 
-    public Conexion(String codigoAeropuertoOrigen, String codigoAeropuertoDestino, double kilometros) {
-        this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
-        this.codigoAeropuertoDestino = codigoAeropuertoDestino;
+    public Conexion(double kilometros) {
+        //this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
+        //this.codigoAeropuertoDestino = codigoAeropuertoDestino;
         this.kilometros = kilometros;
     }
-
+    /*
     public String getCodigoAeropuertoOrigen() {
         return codigoAeropuertoOrigen;
     }
@@ -28,6 +29,8 @@ public class Conexion {
     public void setCodigoAeropuertoDestino(String codigoAeropuertoDestino) {
         this.codigoAeropuertoDestino = codigoAeropuertoDestino;
     }
+    */
+
 
     public double getKilometros() {
         return kilometros;

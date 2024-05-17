@@ -1,51 +1,54 @@
 package sistema;
 
-import dominio.clases.Aerolinea;
-import dominio.clases.Aeropuerto;
-import dominio.clases.Pasajero;
-import dominio.clases.ResultadoBusqueda;
+import dominio.clases.*;
 import dominio.excepciones.CedulaInvalidaException;
+import dominio.excepciones.DatoYaExisteException;
 import dominio.excepciones.DatosInvalidosException;
-import dominio.tads.ABBGenerics3;
+import dominio.excepciones.GrafoLlenoException;
+import dominio.tads.ABBGeneric3;
+import dominio.tads.GrafoConexion;
 import interfaz.*;
+
+import java.util.Objects;
 
 public class ImplementacionSistema implements Sistema {
     int maxAeropuertos = 0;
     int maxAerolineas = 0;
 
-    ABBGenerics3<Pasajero> arbolPasajerosGeneral = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Pasajero> arbolPasajerosGeneral = new ABBGeneric3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));//Cualquier caracter que no este entre 0-9, eliminado
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);//Si cedula1 es mayor que cedula2, devuelve 1, si es menor devuelve -1, si son iguales devuelve 0
     });
-    ABBGenerics3<Pasajero> arbolPasajerosCategoriaPlatino = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Pasajero> arbolPasajerosCategoriaPlatino = new ABBGeneric3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);
     });
-    ABBGenerics3<Pasajero> arbolPasajerosCategoriaFrecuente = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Pasajero> arbolPasajerosCategoriaFrecuente = new ABBGeneric3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);
     });
-    ABBGenerics3<Pasajero> arbolPasajerosCategoriaEstandar = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Pasajero> arbolPasajerosCategoriaEstandar = new ABBGeneric3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
         return Integer.compare(cedula1, cedula2);
     });
 
-    ABBGenerics3<Aerolinea> arbolAerolineasGeneral = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Aerolinea> arbolAerolineasGeneral = new ABBGeneric3<>((p1, p2) -> {
         String codigo1 = p1.getCodigo();
         String codigo2 = p2.getCodigo();
         return codigo1.compareTo(codigo2);
     });
 
-    ABBGenerics3<Aeropuerto> arbolAeropuertosGeneral = new ABBGenerics3<>((p1, p2) -> {
+    ABBGeneric3<Aeropuerto> arbolAeropuertosGeneral = new ABBGeneric3<>((p1, p2) -> {
         String codigo1 = p1.getCodigo();
         String codigo2 = p2.getCodigo();
         return codigo1.compareTo(codigo2);
     });
 
+    GrafoConexion grafoConexionAeropuertos;
 
     @Override
     public Retorno inicializarSistema(int maxAeropuertos, int maxAerolineas) {
@@ -54,8 +57,9 @@ public class ImplementacionSistema implements Sistema {
 
         if (maxAerolineas <= 3)
             return Retorno.error2("La cantidad maxima de aerolineas debe ser mayor a 3");
-        this.maxAeropuertos=maxAeropuertos;
-        this.maxAerolineas=maxAerolineas;
+        this.maxAeropuertos = maxAeropuertos;
+        this.maxAerolineas = maxAerolineas;
+        grafoConexionAeropuertos = new GrafoConexion(maxAeropuertos);
         return Retorno.ok();
     }
 
@@ -150,7 +154,7 @@ public class ImplementacionSistema implements Sistema {
     @Override
     public Retorno registrarAerolinea(String codigo, String nombre) {
 
-        if (arbolAerolineasGeneral.cantNodos()==maxAerolineas)
+        if (arbolAerolineasGeneral.cantNodos() == maxAerolineas)
             return Retorno.error1("Se alcanzo la cantidad maxima de aerolineas");
 
 
@@ -179,32 +183,50 @@ public class ImplementacionSistema implements Sistema {
     @Override
     public Retorno registrarAeropuerto(String codigo, String nombre) {
 
-        if (arbolAeropuertosGeneral.cantNodos()==maxAeropuertos)
-            return Retorno.error1("Se alcanzo la cantidad maxima de Aeropuertos");
-
-
-        Aeropuerto a = new Aeropuerto(codigo, nombre);
         try {
+            Aeropuerto a = new Aeropuerto(codigo, nombre);
             a.validar();
+            grafoConexionAeropuertos.registrarVertice(a);
+            return Retorno.ok();
         } catch (DatosInvalidosException e) {
             return Retorno.error2(e.getMessage());
+        } catch (DatoYaExisteException e) {
+            return Retorno.error3(e.getMessage());
+        } catch (GrafoLlenoException e) {
+            return Retorno.error1(e.getMessage());
         }
 
-        if (arbolAeropuertosGeneral.existe(a))
-            return Retorno.error3("Ya existe una aeropuerto con ese codigo");
-
-        arbolAeropuertosGeneral.agregar(a);
-
-        return Retorno.ok();
 
     }
 
     @Override
     public Retorno registrarConexion(String codigoAeropuertoOrigen, String codigoAeropuertoDestino, double kilometros) {
 
-        //TODO
+        if (kilometros <= 0) {
+            return Retorno.error1("Los kilometros no pueden ser menores a 0");
+        }
 
-        return Retorno.noImplementada();
+        if (Objects.isNull(codigoAeropuertoOrigen) || Objects.isNull(codigoAeropuertoDestino) ||
+                codigoAeropuertoOrigen.trim().isEmpty() || codigoAeropuertoDestino.trim().isEmpty())
+            return Retorno.error2("Los parametros no pueden ser vacios ni nulos");
+
+        Aeropuerto a1 = new Aeropuerto(codigoAeropuertoOrigen);
+        Aeropuerto a2 = new Aeropuerto(codigoAeropuertoDestino);
+
+        if (grafoConexionAeropuertos.buscarIndiceVertice(a1)==-1)
+            return Retorno.error3("No existe el aeropuerto de origen");
+
+        if (grafoConexionAeropuertos.buscarIndiceVertice(a2)==-1)
+            return Retorno.error4("No existe el aeropuerto de destino");
+
+
+        if (grafoConexionAeropuertos.sonAdyacentes(a1, a2)) {
+            return Retorno.error5("Ya existe una conexion entre el origen y el destino");
+        }
+        grafoConexionAeropuertos.registrarArista(a1, a2, new Conexion(kilometros));
+
+
+        return Retorno.ok();
     }
 
     @Override

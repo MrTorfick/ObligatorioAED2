@@ -9,6 +9,11 @@ public class Aeropuerto {
     private String codigo;
     private String nombre;
 
+
+    public Aeropuerto(String codigo) {
+        this.codigo = codigo;
+    }
+
     public Aeropuerto(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
@@ -27,7 +32,7 @@ public class Aeropuerto {
 
     }
 
-    private void validarCodigo() throws DatosInvalidosException {
+    public void validarCodigo() throws DatosInvalidosException {
         if(Objects.isNull(codigo) || codigo.trim().isEmpty())
             throw new DatosInvalidosException("El codigo no es valido");
 

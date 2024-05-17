@@ -3,9 +3,8 @@ package dominio.tads;
 import dominio.clases.ResultadoBusqueda;
 
 import java.util.Comparator;
-import java.util.Objects;
 
-public class ABBGenerics3<T> {
+public class ABBGeneric3<T> {
 
     private class NodoABBGeneric {
         private T dato;
@@ -22,7 +21,7 @@ public class ABBGenerics3<T> {
     private NodoABBGeneric raiz;
     private final Comparator<T> comparador;
 
-    public ABBGenerics3(Comparator<T> comparador) {
+    public ABBGeneric3(Comparator<T> comparador) {
         this.comparador = comparador;
     }
 
