@@ -91,6 +91,7 @@ public class ListaGeneric<T> {
      * Post: Devuelve true si la lista esta llena, false si no lo esta
      *
      * */
+    /*
     private boolean VerificarCapacidad() {
         if (cantElementos == cantMax) {
             return true;
@@ -98,21 +99,22 @@ public class ListaGeneric<T> {
             return false;
         }
     }
+    */
+
 
     public void agregarInicio(T n) {
 
-        if (!VerificarCapacidad()) {
-            Nodo nuevo = new Nodo(n);
-            if (esVacia()) {
-                inicio = nuevo;
-                fin = nuevo;
-            } else {
-                nuevo.setSiguiente(inicio);
-                inicio.setAnterior(nuevo);
-                inicio = nuevo;
-            }
-            cantElementos++;
+        Nodo nuevo = new Nodo(n);
+        if (esVacia()) {
+            inicio = nuevo;
+            fin = nuevo;
+        } else {
+            nuevo.setSiguiente(inicio);
+            inicio.setAnterior(nuevo);
+            inicio = nuevo;
         }
+        cantElementos++;
+
     }
 
 
@@ -121,14 +123,14 @@ public class ListaGeneric<T> {
         if (esVacia()) {
             agregarInicio(n);
         } else {
-            if (!VerificarCapacidad()) {
-                Nodo nuevo = new Nodo(n);
-                fin.setSiguiente(nuevo);
-                nuevo.setAnterior(fin);
-                fin = nuevo;
-                cantElementos++;
-            }
+
+            Nodo nuevo = new Nodo(n);
+            fin.setSiguiente(nuevo);
+            nuevo.setAnterior(fin);
+            fin = nuevo;
+            cantElementos++;
         }
+
     }
 
 

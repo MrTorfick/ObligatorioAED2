@@ -14,6 +14,10 @@ public class Aerolinea {
         this.nombre = nombre;
     }
 
+    public Aerolinea(String codigo) {
+        this.codigo = codigo;
+    }
+
     public String getCodigo() {
         return codigo;
     }

@@ -2,6 +2,7 @@ package dominio.tads;
 
 import dominio.clases.Aeropuerto;
 import dominio.clases.Conexion;
+import dominio.clases.Vuelo;
 import dominio.excepciones.DatoYaExisteException;
 import dominio.excepciones.GrafoLlenoException;
 
@@ -33,25 +34,46 @@ public class GrafoConexion {
             return false;
         }
         return sonAdyacentes(idxOrigen, idxDestino);
-
     }
+
 
     private boolean sonAdyacentes(int idxOrigen, int idxDestino) {
         return this.aristas[idxOrigen][idxDestino].isExiste();
     }
 
+    public boolean existeVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo) {
+        int idxOrigen = this.buscarIndiceVertice(origen);//fila
+        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        if (idxOrigen < 0 || idxDestino < 0) {
+            return false;
+        }
+        return existeVueloBuscar(idxOrigen, idxDestino, vuelo);
+    }
+
+    private boolean existeVueloBuscar(int idxOrigen, int idxDestino, Vuelo vuelo) {
+        if (aristas[idxOrigen][idxDestino].getDatoConexion().getListaVuelos().existeDato(vuelo)) {
+            return true;
+        }
+        return false;
+    }
+    public void agregarVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo){
+        int idxOrigen = this.buscarIndiceVertice(origen);//fila
+        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        aristas[idxOrigen][idxDestino].getDatoConexion().getListaVuelos().agregarFinal(vuelo);
+    }
+
 
     public void registrarVertice(Aeropuerto c) throws GrafoLlenoException, DatoYaExisteException {
-        if(buscarIndiceVertice(c)==1){
+        if (buscarIndiceVertice(c) == 1) {
             throw new DatoYaExisteException("Ya existe el vertice en el grafo");
         }
 
-        if(largoActual==cantMaxVertices){
+        if (largoActual == cantMaxVertices) {
             throw new GrafoLlenoException("El grafo esta lleno");
         }
 
-            vertices[largoActual] = c;
-            largoActual++;
+        vertices[largoActual] = c;
+        largoActual++;
     }
 
 

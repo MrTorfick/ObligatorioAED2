@@ -112,9 +112,9 @@ public class ImplementacionSistema implements Sistema {
         try {
             Pasajero p = new Pasajero(cedula);
             p.validarCedula();
-        } catch (CedulaInvalidaException e) {
-            return Retorno.error1("La cedula es vacia o nula");
         } catch (DatosInvalidosException e) {
+            return Retorno.error1("La cedula es vacia o nula");
+        } catch (CedulaInvalidaException e) {
             return Retorno.error2("La cedula no tiene un formato valido");
         }
 
@@ -213,10 +213,10 @@ public class ImplementacionSistema implements Sistema {
         Aeropuerto a1 = new Aeropuerto(codigoAeropuertoOrigen);
         Aeropuerto a2 = new Aeropuerto(codigoAeropuertoDestino);
 
-        if (grafoConexionAeropuertos.buscarIndiceVertice(a1)==-1)
+        if (grafoConexionAeropuertos.buscarIndiceVertice(a1) == -1)
             return Retorno.error3("No existe el aeropuerto de origen");
 
-        if (grafoConexionAeropuertos.buscarIndiceVertice(a2)==-1)
+        if (grafoConexionAeropuertos.buscarIndiceVertice(a2) == -1)
             return Retorno.error4("No existe el aeropuerto de destino");
 
 
@@ -231,7 +231,35 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno registrarVuelo(String codigoCiudadOrigen, String codigoAeropuertoDestino, String codigoDeVuelo, double combustible, double minutos, double costoEnDolares, String codigoAerolinea) {
-        return Retorno.noImplementada();
+
+        try {
+            Vuelo v = new Vuelo(codigoCiudadOrigen, codigoAeropuertoDestino, codigoDeVuelo, combustible, minutos, costoEnDolares, codigoAerolinea);
+            v.validar();
+            if(grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadOrigen))==-1){
+                return Retorno.error3("No existe el aeropuerto de origen");
+            }
+            if(grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoDestino))==-1){
+                return Retorno.error4("No existe el aeropuerto de destino");
+            }
+
+            if(!arbolAerolineasGeneral.existe(new Aerolinea(codigoAerolinea))){
+                return Retorno.error5("La aerolinea no existe");
+            }
+            if(!grafoConexionAeropuertos.sonAdyacentes(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino))){
+                return Retorno.error6("No existe una conexion entre origen y destino");
+            }
+            if(grafoConexionAeropuertos.existeVuelo(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino), new Vuelo(codigoCiudadOrigen, codigoAeropuertoDestino, codigoDeVuelo, combustible, minutos, costoEnDolares, codigoAerolinea))){
+                return Retorno.error7("Ya existe un vuelo con ese codigo");
+            }
+
+
+            grafoConexionAeropuertos.agregarVuelo(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino), v);
+            return Retorno.ok();
+
+        } catch (DatosInvalidosException e) {
+            return e.getRetorno();
+        }
+
     }
 
     @Override
