@@ -16,6 +16,14 @@ public class GrafoConexion {
     private int largoActual;
 
 
+    public String toUrl() {
+        return VisualizadorGraphViz.grafoToUrl(vertices, aristas,
+                a -> a.isExiste(),
+                c -> c.toString(),
+                a -> a.getDatoConexion().toString());
+    }
+
+
     public GrafoConexion(int cantidadMaximaDeAeropuertos) {
         vertices = new Aeropuerto[cantidadMaximaDeAeropuertos];
         aristas = new Arista[cantidadMaximaDeAeropuertos][cantidadMaximaDeAeropuertos];
@@ -56,7 +64,8 @@ public class GrafoConexion {
         }
         return false;
     }
-    public void agregarVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo){
+
+    public void agregarVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo) {
         int idxOrigen = this.buscarIndiceVertice(origen);//fila
         int idxDestino = this.buscarIndiceVertice(destino);//columno
         aristas[idxOrigen][idxDestino].getDatoConexion().getListaVuelos().agregarFinal(vuelo);
@@ -96,4 +105,63 @@ public class GrafoConexion {
         return -1;
     }
 
+
+    class InfoExploracion {
+        int verticeExplorar;
+        int cantSaltos;
+
+        public InfoExploracion(int verticeExplorar, int cantSaltos) {
+            this.verticeExplorar = verticeExplorar;
+            this.cantSaltos = cantSaltos;
+        }
+    }
+
+
+    public String Bfs(Aeropuerto origen, int cantidadMaximaEscalas, String codigoAerolinea) {
+        Cola<InfoExploracion> frontera = new Cola();// indicesDeVertices  que tengo que llamar
+        boolean[] visitados = new boolean[cantMaxVertices];//acuerdense que todo se inicializa en false por defecto
+        ABBGeneric3<Aeropuerto> listaAeropuertos = new ABBGeneric3<>((p1, p2) -> {
+            String codigo1 = p1.getCodigo();
+            String codigo2 = p2.getCodigo();
+            return codigo1.compareTo(codigo2);
+        });
+
+        frontera.encolar(new InfoExploracion(this.buscarIndiceVertice(origen), 0));
+
+        while (!frontera.esVacia()) {
+            InfoExploracion infoAVisitar = frontera.desencolar();
+            int idxAVisitar = infoAVisitar.verticeExplorar;
+            int nivelDelVerticeAExplorar = infoAVisitar.cantSaltos;
+            if (!visitados[idxAVisitar]) {
+                listaAeropuertos.agregar(vertices[idxAVisitar]);//esto es el lo imprimo
+                System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")");
+                visitados[idxAVisitar] = true;
+
+                //en el pizarron es preguntar por los adyacentes
+                for (int idxDestino = 0; idxDestino < cantMaxVertices; idxDestino++) {
+
+                    if (sonAdyacentes(idxAVisitar, idxDestino)) {
+                        if (nivelDelVerticeAExplorar + 1 <= cantidadMaximaEscalas) {
+
+                            Aeropuerto a1 = vertices[idxAVisitar];
+                            Aeropuerto a2 = vertices[idxDestino];
+
+                            if (aristas[idxAVisitar][idxDestino].getDatoConexion().VueloCoincidaConAerolinea(codigoAerolinea, a1.getCodigo(), a2.getCodigo())) {
+                                frontera.encolar(new InfoExploracion(idxDestino, nivelDelVerticeAExplorar + 1));
+                            }
+
+
+                        } else {
+                            return listaAeropuertos.inOrder();
+                        }
+                    }
+                }
+
+            }
+
+        }
+        return listaAeropuertos.inOrder();
+
+    }
 }
+

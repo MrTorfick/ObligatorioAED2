@@ -235,27 +235,26 @@ public class ImplementacionSistema implements Sistema {
         try {
             Vuelo v = new Vuelo(codigoCiudadOrigen, codigoAeropuertoDestino, codigoDeVuelo, combustible, minutos, costoEnDolares, codigoAerolinea);
             v.validar();
-            if(grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadOrigen))==-1){
+            if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadOrigen)) == -1) {
                 return Retorno.error3("No existe el aeropuerto de origen");
             }
-            if(grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoDestino))==-1){
+            if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoDestino)) == -1) {
                 return Retorno.error4("No existe el aeropuerto de destino");
             }
 
-            if(!arbolAerolineasGeneral.existe(new Aerolinea(codigoAerolinea))){
+            if (!arbolAerolineasGeneral.existe(new Aerolinea(codigoAerolinea))) {
                 return Retorno.error5("La aerolinea no existe");
             }
-            if(!grafoConexionAeropuertos.sonAdyacentes(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino))){
+            if (!grafoConexionAeropuertos.sonAdyacentes(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino))) {
                 return Retorno.error6("No existe una conexion entre origen y destino");
             }
-            if(grafoConexionAeropuertos.existeVuelo(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino), new Vuelo(codigoCiudadOrigen, codigoAeropuertoDestino, codigoDeVuelo, combustible, minutos, costoEnDolares, codigoAerolinea))){
+            if (grafoConexionAeropuertos.existeVuelo(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino), new Vuelo(codigoCiudadOrigen, codigoAeropuertoDestino, codigoDeVuelo, combustible, minutos, costoEnDolares, codigoAerolinea))) {
                 return Retorno.error7("Ya existe un vuelo con ese codigo");
             }
 
 
             grafoConexionAeropuertos.agregarVuelo(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoAeropuertoDestino), v);
             return Retorno.ok();
-
         } catch (DatosInvalidosException e) {
             return e.getRetorno();
         }
@@ -264,7 +263,22 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno listadoAeropuertosCantDeEscalas(String codigoAeropuertoOrigen, int cantidad, String codigoAerolinea) {
-        return Retorno.noImplementada();
+
+        if (cantidad < 0) {
+            return Retorno.error1("La cantidad de escalas no puede ser menor a 0");
+        }
+
+        if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoOrigen)) == -1) {
+            return Retorno.error2("No existe el aeropuerto de origen");
+        }
+
+        if (!arbolAerolineasGeneral.existe(new Aerolinea(codigoAerolinea))) {
+            return Retorno.error3("Ya existe una aerolinea con ese codigo");
+        }
+        String lista = grafoConexionAeropuertos.Bfs(new Aeropuerto(codigoAeropuertoOrigen), cantidad, codigoAerolinea);
+        System.out.println(lista);
+        System.out.println(grafoConexionAeropuertos.toUrl());
+        return Retorno.ok(lista);
     }
 
     @Override

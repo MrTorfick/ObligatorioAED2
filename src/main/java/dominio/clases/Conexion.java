@@ -9,6 +9,24 @@ public class Conexion {
     private double kilometros;
     private ListaGeneric<Vuelo> listaVuelos = new ListaGeneric();
 
+    //Recorre la lista de vuelos, necesito obtener el objeto Vuelo en su recorrido
+
+    public boolean VueloCoincidaConAerolinea(String codigoAerolinea, String codigoAeropuertoDestino, String codigoAeropuertoOrigen) {
+        if (listaVuelos.cantElementos() == 0) {
+            return false;
+        }
+        for (int i = 1; i <= listaVuelos.cantElementos(); i++) {
+            Vuelo vuelo = listaVuelos.obtenerElemento(new Vuelo(codigoAeropuertoDestino, codigoAeropuertoOrigen, codigoAerolinea));
+            if(vuelo==null)
+                return false;
+            if (!vuelo.getCodigoAerolinea().equals(codigoAerolinea)) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
     public ListaGeneric<Vuelo> getListaVuelos() {
         return listaVuelos;
     }
@@ -54,5 +72,8 @@ public class Conexion {
         this.kilometros = kilometros;
     }
 
-
+    @Override
+    public String toString() {
+        return "Kilometros: " + kilometros + " Vuelos: " + listaVuelos.cantElementos();
+    }
 }

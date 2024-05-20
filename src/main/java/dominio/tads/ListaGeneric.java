@@ -85,13 +85,6 @@ public class ListaGeneric<T> {
     }
 
 
-    /*
-     * Pre: No hay
-     *
-     * Post: Devuelve true si la lista esta llena, false si no lo esta
-     *
-     * */
-    /*
     private boolean VerificarCapacidad() {
         if (cantElementos == cantMax) {
             return true;
@@ -99,7 +92,6 @@ public class ListaGeneric<T> {
             return false;
         }
     }
-    */
 
 
     public void agregarInicio(T n) {
@@ -232,6 +224,8 @@ public class ListaGeneric<T> {
     }
 
 
+    /*
+
     public Nodo obtenerElemento(T n) {
 
         Nodo aux = inicio;
@@ -249,6 +243,34 @@ public class ListaGeneric<T> {
         return ret;
 
     }
+    */
+
+    //Metodo que devuelve todos los elementos de la lista
+    public T[] obtenerElementos() {
+        T[] elementos = (T[]) new Object[cantElementos];
+        Nodo aux = inicio;
+        int i = 0;
+        while (aux != null) {
+            elementos[i] = (T) aux.getDato();
+            aux = aux.getSiguiente();
+            i++;
+        }
+        return elementos;
+    }
+
+
+    public T obtenerElemento(T n) {
+        Nodo aux = inicio;
+        while (aux != null) {
+            if (aux.getDato().equals(n)) {
+                return (T) aux.getDato();
+            }
+            aux = aux.getSiguiente();
+        }
+        return null;
+    }
+
+
 
 
     public boolean existeDato(T n) {
