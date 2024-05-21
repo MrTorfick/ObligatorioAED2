@@ -4,7 +4,9 @@ import dominio.clases.Aeropuerto;
 import dominio.clases.Conexion;
 import dominio.clases.Vuelo;
 import dominio.excepciones.DatoYaExisteException;
+import dominio.excepciones.DatosInvalidosException;
 import dominio.excepciones.GrafoLlenoException;
+import dominio.excepciones.NoHayCaminoGrafo;
 
 public class GrafoConexion {
 
@@ -162,6 +164,97 @@ public class GrafoConexion {
         }
         return listaAeropuertos.inOrder();
 
+    }
+
+    public String[] Dijkstra(Aeropuerto origen, Aeropuerto destino) throws NoHayCaminoGrafo {
+        int idxOrigen = buscarIndiceVertice(origen);
+        int idxDestino = buscarIndiceVertice(destino);
+        int[] padres = new int[cantMaxVertices];
+        boolean[] visitados = new boolean[cantMaxVertices];
+        double[] distancias = new double[cantMaxVertices];
+
+        for (int i = 0; i < cantMaxVertices; i++) {
+            distancias[i] = Double.MAX_VALUE;
+            visitados[i] = false;
+            padres[i] = -1;
+        }
+
+        distancias[idxOrigen] = 0;
+        padres[idxOrigen] = idxOrigen;
+
+        while (!estaVisitadoTodo(visitados, padres)) {
+            int idxAExplorar = menorDistanciaNoVisitado(distancias, visitados);
+
+            double distanciaVertice = distancias[idxAExplorar];
+            for (int ady = 0; ady < cantMaxVertices; ady++) {
+                if (sonAdyacentes(idxAExplorar, ady)) {
+                    double numArista = aristas[idxAExplorar][ady].getDatoConexion().getKilometros();
+                    double distanciaAdyacente = distanciaVertice + numArista;
+                    if (distanciaAdyacente < distancias[ady]) {
+                        distancias[ady] = distanciaAdyacente;
+                        padres[ady] = idxAExplorar;
+                    }
+                }
+            }
+            visitados[idxAExplorar] = true;
+        }
+
+        double caminoMinimo = distancias[idxDestino];
+        String retornar = reconstruirCamino(idxOrigen, idxDestino, padres);
+        return new String[]{Double.toString(caminoMinimo), retornar};
+    }
+
+    private String reconstruirCamino(int idxOrigen, int idxDestino, int[] padres) throws NoHayCaminoGrafo {
+        StringBuilder camino = new StringBuilder();
+        if (padres[idxDestino] == -1) {
+            throw new NoHayCaminoGrafo("La cedula no puede ser nula o vacia");
+        }
+        int idxActual = idxDestino;
+        while (idxActual != idxOrigen) {
+            camino.insert(0, vertices[idxActual].getCodigo() + ";" + vertices[idxActual].getNombre() + "|");
+            idxActual = padres[idxActual];
+        }
+        camino.insert(0, vertices[idxOrigen].getCodigo() + ";" + vertices[idxOrigen].getNombre() + "|");
+        camino.deleteCharAt(camino.length() - 1);
+        return camino.toString();
+    }
+     /*
+    private void imprimirTablaDijkstra(String titulo, int[] padres, boolean[] visitados, double[] distancias) {
+        System.out.println(titulo);
+        System.out.println("V\tdist\tPadre\tVisitado");
+        for (int i = 0; i < largoActual; i++) {
+            if (padres[i] != -1) {
+                System.out.printf("%s\t%.1f\t%s(%s)\t%s\n",
+                        vertices[i], distancias[i], vertices[padres[i]], padres[i], visitados[i]);
+            } else {
+                System.out.printf("%s\t%.1f\t - \t%s\n",
+                        vertices[i], distancias[i], visitados[i]);
+            }
+        }
+    }
+
+      */
+
+
+    private boolean estaVisitadoTodo(boolean[] visitados, int[] padres) {
+        for (int i = 0; i < visitados.length; i++) {
+            if (!visitados[i] && padres[i] != -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int menorDistanciaNoVisitado(double[] distancias, boolean[] visitados) {
+        double min = Double.MAX_VALUE;
+        int idxMin = -1;
+        for (int i = 0; i < distancias.length; i++) {
+            if (distancias[i] <= min && !visitados[i]) {
+                min = distancias[i];
+                idxMin = i;
+            }
+        }
+        return idxMin;
     }
 }
 

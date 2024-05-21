@@ -1,10 +1,7 @@
 package sistema;
 
 import dominio.clases.*;
-import dominio.excepciones.CedulaInvalidaException;
-import dominio.excepciones.DatoYaExisteException;
-import dominio.excepciones.DatosInvalidosException;
-import dominio.excepciones.GrafoLlenoException;
+import dominio.excepciones.*;
 import dominio.tads.ABBGeneric3;
 import dominio.tads.GrafoConexion;
 import interfaz.*;
@@ -283,7 +280,29 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno viajeCostoMinimoKilometros(String codigoCiudadOrigen, String codigoCiudadDestino) {
-        return Retorno.noImplementada();
+
+        try {
+
+            if (codigoCiudadOrigen == null || codigoCiudadDestino == null || codigoCiudadDestino.trim().isEmpty() || codigoCiudadOrigen.trim().isEmpty()) {
+                return Retorno.error1("Los parametros no pueden ser vacios ni nulos");
+            }
+            if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadOrigen)) == -1) {
+                return Retorno.error3("No existe el aeropuerto de origen");
+            }
+
+            if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadDestino)) == -1) {
+                return Retorno.error4("No existe el aeropuerto de destino");
+            }
+
+
+            String[] resultado = grafoConexionAeropuertos.Dijkstra(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoCiudadDestino));
+            double caminoMinimo = Double.parseDouble(resultado[0]);
+            String camino = resultado[1];
+            return Retorno.ok((int) caminoMinimo, camino);
+        } catch (NoHayCaminoGrafo e) {
+            return Retorno.error2(e.getMessage());
+        }
+
     }
 
     @Override
