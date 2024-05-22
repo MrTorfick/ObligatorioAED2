@@ -4,9 +4,8 @@ import dominio.clases.Aeropuerto;
 import dominio.clases.Conexion;
 import dominio.clases.Vuelo;
 import dominio.excepciones.DatoYaExisteException;
-import dominio.excepciones.DatosInvalidosException;
 import dominio.excepciones.GrafoLlenoException;
-import dominio.excepciones.NoHayCaminoGrafo;
+import dominio.excepciones.NoHayCaminoGrafoException;
 
 public class GrafoConexion {
 
@@ -135,27 +134,29 @@ public class GrafoConexion {
             int idxAVisitar = infoAVisitar.verticeExplorar;
             int nivelDelVerticeAExplorar = infoAVisitar.cantSaltos;
             if (!visitados[idxAVisitar]) {
-                listaAeropuertos.agregar(vertices[idxAVisitar]);//esto es el lo imprimo
-                System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")");
-                visitados[idxAVisitar] = true;
+                if (nivelDelVerticeAExplorar <= cantidadMaximaEscalas) {
+                    listaAeropuertos.agregar(vertices[idxAVisitar]);//esto es el lo imprimo
+                    System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")");
+                    visitados[idxAVisitar] = true;
+                } else {
+                    break;
+                }
+
 
                 //en el pizarron es preguntar por los adyacentes
                 for (int idxDestino = 0; idxDestino < cantMaxVertices; idxDestino++) {
 
                     if (sonAdyacentes(idxAVisitar, idxDestino)) {
-                        if (nivelDelVerticeAExplorar + 1 <= cantidadMaximaEscalas) {
-
-                            Aeropuerto a1 = vertices[idxAVisitar];
-                            Aeropuerto a2 = vertices[idxDestino];
-
-                            if (aristas[idxAVisitar][idxDestino].getDatoConexion().VueloCoincidaConAerolinea(codigoAerolinea, a1.getCodigo(), a2.getCodigo())) {
-                                frontera.encolar(new InfoExploracion(idxDestino, nivelDelVerticeAExplorar + 1));
-                            }
 
 
-                        } else {
-                            return listaAeropuertos.inOrder();
+                        Aeropuerto a1 = vertices[idxAVisitar];
+                        Aeropuerto a2 = vertices[idxDestino];
+
+                        if (aristas[idxAVisitar][idxDestino].getDatoConexion().VueloCoincidaConAerolinea(codigoAerolinea, a1.getCodigo(), a2.getCodigo())) {
+                            frontera.encolar(new InfoExploracion(idxDestino, nivelDelVerticeAExplorar + 1));
                         }
+
+
                     }
                 }
 
@@ -166,7 +167,7 @@ public class GrafoConexion {
 
     }
 
-    public String[] Dijkstra(Aeropuerto origen, Aeropuerto destino) throws NoHayCaminoGrafo {
+    public String[] Dijkstra(Aeropuerto origen, Aeropuerto destino) throws NoHayCaminoGrafoException {
         int idxOrigen = buscarIndiceVertice(origen);
         int idxDestino = buscarIndiceVertice(destino);
         int[] padres = new int[cantMaxVertices];
@@ -204,10 +205,10 @@ public class GrafoConexion {
         return new String[]{Double.toString(caminoMinimo), retornar};
     }
 
-    private String reconstruirCamino(int idxOrigen, int idxDestino, int[] padres) throws NoHayCaminoGrafo {
+    private String reconstruirCamino(int idxOrigen, int idxDestino, int[] padres) throws NoHayCaminoGrafoException {
         StringBuilder camino = new StringBuilder();
         if (padres[idxDestino] == -1) {
-            throw new NoHayCaminoGrafo("La cedula no puede ser nula o vacia");
+            throw new NoHayCaminoGrafoException("La cedula no puede ser nula o vacia");
         }
         int idxActual = idxDestino;
         while (idxActual != idxOrigen) {

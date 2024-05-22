@@ -299,7 +299,7 @@ public class ImplementacionSistema implements Sistema {
             double caminoMinimo = Double.parseDouble(resultado[0]);
             String camino = resultado[1];
             return Retorno.ok((int) caminoMinimo, camino);
-        } catch (NoHayCaminoGrafo e) {
+        } catch (NoHayCaminoGrafoException e) {
             return Retorno.error2(e.getMessage());
         }
 
@@ -307,6 +307,8 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno viajeCostoMinimoEnMinutos(String codigoAeropuertoOrigen, String codigoAeropuertoDestino) {
+        
+
         return Retorno.noImplementada();
     }
 

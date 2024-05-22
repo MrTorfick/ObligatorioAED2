@@ -9,7 +9,7 @@ public class ListaGeneric<T> {
     private int cantMax;
 
 
-    private /*static*/ class Nodo<T> {
+    private class Nodo<T> {
         private T dato;
         private Nodo<T> siguiente;
         private Nodo<T> anterior;
@@ -269,8 +269,6 @@ public class ListaGeneric<T> {
         }
         return null;
     }
-
-
 
 
     public boolean existeDato(T n) {

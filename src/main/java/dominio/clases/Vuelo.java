@@ -26,15 +26,11 @@ public class Vuelo {
     }
 
 
-
     public Vuelo(String codigoAeropuertoDestino, String codigoAeropuertoOrigen, String codigoAerolinea) {
         this.codigoAeropuertoDestino = codigoAeropuertoDestino;
         this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
         this.codigoAerolinea = codigoAerolinea;
     }
-
-
-
 
 
     public void validar() throws DatosInvalidosException {
@@ -127,7 +123,6 @@ public class Vuelo {
         return Objects.equals(codigoAeropuertoOrigen, vuelo.codigoAeropuertoOrigen) && Objects.equals(codigoAeropuertoDestino, vuelo.codigoAeropuertoDestino) && Objects.equals(codigoDeVuelo, vuelo.codigoDeVuelo)
                 || Objects.equals(codigoAeropuertoOrigen, vuelo.codigoAeropuertoDestino) && Objects.equals(codigoAeropuertoDestino, vuelo.codigoAeropuertoOrigen) && Objects.equals(codigoAerolinea, vuelo.codigoAerolinea);
     }
-
 
 
     @Override
