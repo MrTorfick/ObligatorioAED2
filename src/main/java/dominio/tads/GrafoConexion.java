@@ -18,10 +18,7 @@ public class GrafoConexion {
 
 
     public String toUrl() {
-        return VisualizadorGraphViz.grafoToUrl(vertices, aristas,
-                a -> a.isExiste(),
-                c -> c.toString(),
-                a -> a.getDatoConexion().toString());
+        return VisualizadorGraphViz.grafoToUrl(vertices, aristas, a -> a.isExiste(), c -> c.toString(), a -> a.getDatoConexion().toString());
     }
 
 
@@ -99,8 +96,7 @@ public class GrafoConexion {
 
         for (int i = 0; i < vertices.length; i++) {
             Aeropuerto c = vertices[i];
-            if (c != null && c.equals(aBuscarIndice))
-                return i;
+            if (c != null && c.equals(aBuscarIndice)) return i;
 
         }
         return -1;
@@ -167,7 +163,7 @@ public class GrafoConexion {
 
     }
 
-    public String[] Dijkstra(Aeropuerto origen, Aeropuerto destino) throws NoHayCaminoGrafoException {
+    public String[] Dijkstra(Aeropuerto origen, Aeropuerto destino, String criterio) throws NoHayCaminoGrafoException {
         int idxOrigen = buscarIndiceVertice(origen);
         int idxDestino = buscarIndiceVertice(destino);
         int[] padres = new int[cantMaxVertices];
@@ -188,8 +184,17 @@ public class GrafoConexion {
 
             double distanciaVertice = distancias[idxAExplorar];
             for (int ady = 0; ady < cantMaxVertices; ady++) {
-                if (sonAdyacentes(idxAExplorar, ady)) {
-                    double numArista = aristas[idxAExplorar][ady].getDatoConexion().getKilometros();
+                if (sonAdyacentes(idxAExplorar, ady) && aristas[idxAExplorar][ady].getDatoConexion().getListaVuelos().cantElementos() > 0) {
+                    double numArista = 0;
+                    switch (criterio) {
+                        case "kilometros":
+                            numArista = aristas[idxAExplorar][ady].getDatoConexion().getKilometros();
+                            break;
+                        case "minutos":
+                            numArista = aristas[idxAExplorar][ady].getDatoConexion().obtenerCaminoMenosCostosoEnMinutos();
+                            break;
+                    }
+                    //double numArista = aristas[idxAExplorar][ady].getDatoConexion().getKilometros();
                     double distanciaAdyacente = distanciaVertice + numArista;
                     if (distanciaAdyacente < distancias[ady]) {
                         distancias[ady] = distanciaAdyacente;

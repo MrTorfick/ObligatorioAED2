@@ -283,7 +283,7 @@ public class ImplementacionSistema implements Sistema {
 
         try {
 
-            if (codigoCiudadOrigen == null || codigoCiudadDestino == null || codigoCiudadDestino.trim().isEmpty() || codigoCiudadOrigen.trim().isEmpty()) {
+            if (Objects.isNull(codigoCiudadOrigen) || Objects.isNull(codigoCiudadDestino) || codigoCiudadDestino.trim().isEmpty() || codigoCiudadOrigen.trim().isEmpty()) {
                 return Retorno.error1("Los parametros no pueden ser vacios ni nulos");
             }
             if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoCiudadOrigen)) == -1) {
@@ -295,7 +295,7 @@ public class ImplementacionSistema implements Sistema {
             }
 
 
-            String[] resultado = grafoConexionAeropuertos.Dijkstra(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoCiudadDestino));
+            String[] resultado = grafoConexionAeropuertos.Dijkstra(new Aeropuerto(codigoCiudadOrigen), new Aeropuerto(codigoCiudadDestino), "kilometros");
             double caminoMinimo = Double.parseDouble(resultado[0]);
             String camino = resultado[1];
             return Retorno.ok((int) caminoMinimo, camino);
@@ -307,9 +307,29 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno viajeCostoMinimoEnMinutos(String codigoAeropuertoOrigen, String codigoAeropuertoDestino) {
-        
 
-        return Retorno.noImplementada();
+        if (codigoAeropuertoOrigen == null || codigoAeropuertoDestino == null || codigoAeropuertoOrigen.trim().isEmpty() || codigoAeropuertoDestino.trim().isEmpty()) {
+            return Retorno.error1("Los parametros no pueden ser vacios ni nulos");
+        }
+
+        if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoOrigen)) == -1) {
+            return Retorno.error3("No existe el aeropuerto de origen");
+        }
+
+        if (grafoConexionAeropuertos.buscarIndiceVertice(new Aeropuerto(codigoAeropuertoDestino)) == -1) {
+            return Retorno.error4("No existe el aeropuerto de destino");
+        }
+
+        try {
+            String[] resultado = grafoConexionAeropuertos.Dijkstra(new Aeropuerto(codigoAeropuertoOrigen), new Aeropuerto(codigoAeropuertoDestino), "minutos");
+            double caminoMinimo = Double.parseDouble(resultado[0]);
+            String camino = resultado[1];
+            return Retorno.ok((int) caminoMinimo, camino);
+
+
+        } catch (NoHayCaminoGrafoException e) {
+            return Retorno.error2(e.getMessage());
+        }
     }
 
 

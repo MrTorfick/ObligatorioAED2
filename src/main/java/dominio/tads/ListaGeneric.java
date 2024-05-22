@@ -1,6 +1,8 @@
 package dominio.tads;
 
 
+import java.util.Comparator;
+
 public class ListaGeneric<T> {
 
     private Nodo<T> inicio;
@@ -13,6 +15,7 @@ public class ListaGeneric<T> {
         private T dato;
         private Nodo<T> siguiente;
         private Nodo<T> anterior;
+
 
         public Nodo(T dato) {
             this.dato = dato;
@@ -43,6 +46,19 @@ public class ListaGeneric<T> {
         public void setDato(T dato) {
             this.dato = dato;
         }
+    }
+
+    public T obtenerMinimo(Comparator<T> comparator) {
+        T menor = inicio.getDato();
+        Nodo<T> aux = inicio;
+        while (aux != null) {
+
+            if (comparator.compare(aux.getDato(), menor) < 0) {
+                menor = aux.getDato();
+            }
+            aux = aux.getSiguiente();
+        }
+        return menor;
     }
 
 

@@ -2,6 +2,8 @@ package dominio.clases;
 
 import dominio.tads.ListaGeneric;
 
+import java.util.Comparator;
+
 public class Conexion {
 
     //private String codigoAeropuertoOrigen;
@@ -17,13 +19,20 @@ public class Conexion {
         }
         for (int i = 1; i <= listaVuelos.cantElementos(); i++) {
             Vuelo vuelo = listaVuelos.obtenerElemento(new Vuelo(codigoAeropuertoDestino, codigoAeropuertoOrigen, codigoAerolinea));
-            if(vuelo==null)
+            if (vuelo == null)
                 return false;
             if (!vuelo.getCodigoAerolinea().equals(codigoAerolinea)) {
                 return false;
             }
         }
         return true;
+
+    }
+
+    public double obtenerCaminoMenosCostosoEnMinutos() {
+        Vuelo v = listaVuelos.obtenerMinimo(Comparator.comparing((Vuelo vuelo) -> vuelo.getMinutos()));
+        return v.getMinutos();
+
 
     }
 
