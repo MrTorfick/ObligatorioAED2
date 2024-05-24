@@ -115,8 +115,8 @@ public class GrafoConexion {
 
 
     public String Bfs(Aeropuerto origen, int cantidadMaximaEscalas, String codigoAerolinea) {
-        Cola<InfoExploracion> frontera = new Cola();// indicesDeVertices  que tengo que llamar
-        boolean[] visitados = new boolean[cantMaxVertices];//acuerdense que todo se inicializa en false por defecto
+        Cola<InfoExploracion> frontera = new Cola();
+        boolean[] visitados = new boolean[cantMaxVertices];
         ABBGeneric3<Aeropuerto> listaAeropuertos = new ABBGeneric3<>((p1, p2) -> {
             String codigo1 = p1.getCodigo();
             String codigo2 = p2.getCodigo();
@@ -132,14 +132,12 @@ public class GrafoConexion {
             if (!visitados[idxAVisitar]) {
                 if (nivelDelVerticeAExplorar <= cantidadMaximaEscalas) {
                     listaAeropuertos.agregar(vertices[idxAVisitar]);//esto es el lo imprimo
-                    System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")");
+                    //System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")"); //TODO
                     visitados[idxAVisitar] = true;
                 } else {
                     break;
                 }
 
-
-                //en el pizarron es preguntar por los adyacentes
                 for (int idxDestino = 0; idxDestino < cantMaxVertices; idxDestino++) {
 
                     if (sonAdyacentes(idxAVisitar, idxDestino)) {
@@ -194,7 +192,6 @@ public class GrafoConexion {
                             numArista = aristas[idxAExplorar][ady].getDatoConexion().obtenerCaminoMenosCostosoEnMinutos();
                             break;
                     }
-                    //double numArista = aristas[idxAExplorar][ady].getDatoConexion().getKilometros();
                     double distanciaAdyacente = distanciaVertice + numArista;
                     if (distanciaAdyacente < distancias[ady]) {
                         distancias[ady] = distanciaAdyacente;
@@ -224,22 +221,6 @@ public class GrafoConexion {
         camino.deleteCharAt(camino.length() - 1);
         return camino.toString();
     }
-     /*
-    private void imprimirTablaDijkstra(String titulo, int[] padres, boolean[] visitados, double[] distancias) {
-        System.out.println(titulo);
-        System.out.println("V\tdist\tPadre\tVisitado");
-        for (int i = 0; i < largoActual; i++) {
-            if (padres[i] != -1) {
-                System.out.printf("%s\t%.1f\t%s(%s)\t%s\n",
-                        vertices[i], distancias[i], vertices[padres[i]], padres[i], visitados[i]);
-            } else {
-                System.out.printf("%s\t%.1f\t - \t%s\n",
-                        vertices[i], distancias[i], visitados[i]);
-            }
-        }
-    }
-
-      */
 
 
     private boolean estaVisitadoTodo(boolean[] visitados, int[] padres) {

@@ -203,6 +203,7 @@ public class ImplementacionSistema implements Sistema {
             return Retorno.error1("Los kilometros no pueden ser menores a 0");
         }
 
+
         if (Objects.isNull(codigoAeropuertoOrigen) || Objects.isNull(codigoAeropuertoDestino) ||
                 codigoAeropuertoOrigen.trim().isEmpty() || codigoAeropuertoDestino.trim().isEmpty())
             return Retorno.error2("Los parametros no pueden ser vacios ni nulos");
@@ -273,8 +274,8 @@ public class ImplementacionSistema implements Sistema {
             return Retorno.error3("Ya existe una aerolinea con ese codigo");
         }
         String lista = grafoConexionAeropuertos.Bfs(new Aeropuerto(codigoAeropuertoOrigen), cantidad, codigoAerolinea);
-        System.out.println(lista);
-        System.out.println(grafoConexionAeropuertos.toUrl());
+        //System.out.println(lista);
+        // System.out.println(grafoConexionAeropuertos.toUrl());
         return Retorno.ok(lista);
     }
 

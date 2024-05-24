@@ -48,19 +48,6 @@ public class ListaGeneric<T> {
         }
     }
 
-    public T obtenerMinimo(Comparator<T> comparator) {
-        T menor = inicio.getDato();
-        Nodo<T> aux = inicio;
-        while (aux != null) {
-
-            if (comparator.compare(aux.getDato(), menor) < 0) {
-                menor = aux.getDato();
-            }
-            aux = aux.getSiguiente();
-        }
-        return menor;
-    }
-
 
     public ListaGeneric() {
         inicio = null;
@@ -98,15 +85,6 @@ public class ListaGeneric<T> {
 
     public void setFin(Nodo fin) {
         this.fin = fin;
-    }
-
-
-    private boolean VerificarCapacidad() {
-        if (cantElementos == cantMax) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 
@@ -161,23 +139,6 @@ public class ListaGeneric<T> {
     }
 
 
-    public void borrarFin() {
-
-        if (!esVacia()) {
-            if (cantElementos == 1) {
-                this.vaciar();
-            } else {
-                Nodo borrar = fin;
-                fin = fin.getAnterior();
-                borrar.setAnterior(null);
-                fin.setSiguiente(null);
-                cantElementos--;
-            }
-        }
-
-    }
-
-
     public void vaciar() {
         inicio = null;
         fin = null;
@@ -185,100 +146,28 @@ public class ListaGeneric<T> {
     }
 
 
-    public void mostrar() {
-        Nodo aux = inicio;
-        while (aux != null) {
-            System.out.println(aux.getDato());
-            aux = aux.getSiguiente();
-        }
-    }
-
-    /*
-     * Pre: No hay
-     * Post: Se muestra la lista recursivamente
-     * */
-    public void mostrarRecursivo() {
-        mostrarRecursivo(inicio);
-    }
-
-    private void mostrarRecursivo(Nodo aux) {
-        if (aux != null) {
-            System.out.println(aux.getDato());
-            System.out.println(" ");
-            mostrarRecursivo(aux.getSiguiente());
-        }
-    }
-
-
-    public void borrarElemento(T n) {
-        if (!esVacia()) {
-            if (inicio.getDato().equals(n)) {
-                borrarInicio();
-                cantElementos--;
-            } else if (fin.getDato().equals(n)) {
-                borrarFin();
-                cantElementos--;
-            } else {
-                Nodo aux = inicio;
-                while (aux.getSiguiente() != null && !aux.getSiguiente().getDato().equals(n)) {
-                    aux = aux.getSiguiente();
-                }
-                if (aux.getSiguiente() != null) {
-                    Nodo aBorrar = aux.getSiguiente();
-                    aux.setSiguiente(aBorrar.getSiguiente());
-                    aBorrar.setSiguiente(null);
-                    cantElementos--;
-                }
-            }
-        }
-
-    }
-
-
     public int cantElementos() {
         return cantElementos;
     }
 
+    public T obtenerMinimo(Comparator<T> comparator) {
+        T menor = inicio.getDato();
+        Nodo<T> aux = inicio;
+        while (aux != null) {
 
-    /*
-
-    public Nodo obtenerElemento(T n) {
-
-        Nodo aux = inicio;
-        Nodo ret = null;
-        boolean encontre = false;
-
-        while (aux != null && !encontre) {
-
-            if (aux.getDato().equals(n)) {
-                ret = aux;
-                encontre = true;
+            if (comparator.compare(aux.getDato(), menor) < 0) {
+                menor = aux.getDato();
             }
             aux = aux.getSiguiente();
         }
-        return ret;
-
-    }
-    */
-
-    //Metodo que devuelve todos los elementos de la lista
-    public T[] obtenerElementos() {
-        T[] elementos = (T[]) new Object[cantElementos];
-        Nodo aux = inicio;
-        int i = 0;
-        while (aux != null) {
-            elementos[i] = (T) aux.getDato();
-            aux = aux.getSiguiente();
-            i++;
-        }
-        return elementos;
+        return menor;
     }
 
 
-    public T obtenerElemento(T n) {
+    public T obtenerElemento(T n, Comparator<T> comparator) {
         Nodo aux = inicio;
         while (aux != null) {
-            if (aux.getDato().equals(n)) {
+            if (comparator.compare((T) aux.getDato(), n) == 0) {
                 return (T) aux.getDato();
             }
             aux = aux.getSiguiente();
@@ -309,56 +198,6 @@ public class ListaGeneric<T> {
         return existe;
 
     }
-
-    /*
-     * Pre: El elemento no puede ser nulo
-     * El elemento debe ser una cola
-     * Post: Agrega los elementos de la cola a la lista de forma ordenada
-     * */
-    /*
-    public void agregarOrdenadoCola(Cola<T> cola) {
-        Nodo aux = (Nodo) cola.front();
-        while (aux != null) {
-            this.agregarOrdenado((T) aux.getDato());
-            aux = aux.getSiguiente();
-        }
-    }
-
-    /*
-     * Pre: El elemento no puede ser nulo
-     * El elemento debe ser una lista
-     * Post: Agrega los elementos de la lista a la lista de forma ordeanda
-     * */
-
-    /*
-    public void agregarOrdenadoListas(Lista<T> lista) {
-        Nodo aux = lista.getInicio();
-        while (aux != null) {
-            this.agregarOrdenado((T) aux.getDato());
-            aux = aux.getSiguiente();
-        }
-    }
-
-
-    public void agregarOrdenado(T x) {
-        if (esVacia() || inicio.getDato().compareTo(x) >= 0) {
-            this.agregarInicio(x);
-        } else {
-            Nodo aux = inicio;
-            while (aux.getSiguiente() != null && aux.getSiguiente().getDato().compareTo(x) < 0) {
-                aux = aux.getSiguiente();
-            }
-            if (aux.getSiguiente() == null) {
-                this.agregarFinal(x);
-            } else {
-                Nodo nuevo = new Nodo(x);
-                nuevo.setSiguiente(aux.getSiguiente());
-                aux.setSiguiente(nuevo);
-                cantElementos++;
-            }
-        }
-    }
-    */
 
 
 }

@@ -120,10 +120,8 @@ public class Vuelo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vuelo vuelo = (Vuelo) o;
-        return Objects.equals(codigoAeropuertoOrigen, vuelo.codigoAeropuertoOrigen) && Objects.equals(codigoAeropuertoDestino, vuelo.codigoAeropuertoDestino) && Objects.equals(codigoDeVuelo, vuelo.codigoDeVuelo)
-                || Objects.equals(codigoAeropuertoOrigen, vuelo.codigoAeropuertoDestino) && Objects.equals(codigoAeropuertoDestino, vuelo.codigoAeropuertoOrigen) && Objects.equals(codigoAerolinea, vuelo.codigoAerolinea);
+        return Objects.equals(codigoAeropuertoOrigen, vuelo.codigoAeropuertoOrigen) && Objects.equals(codigoAeropuertoDestino, vuelo.codigoAeropuertoDestino) && Objects.equals(codigoDeVuelo, vuelo.codigoDeVuelo);
     }
-
 
     @Override
     public int hashCode() {

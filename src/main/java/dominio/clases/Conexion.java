@@ -6,23 +6,20 @@ import java.util.Comparator;
 
 public class Conexion {
 
-    //private String codigoAeropuertoOrigen;
-    //private String codigoAeropuertoDestino;
     private double kilometros;
     private ListaGeneric<Vuelo> listaVuelos = new ListaGeneric();
 
-    //Recorre la lista de vuelos, necesito obtener el objeto Vuelo en su recorrido
 
     public boolean VueloCoincidaConAerolinea(String codigoAerolinea, String codigoAeropuertoDestino, String codigoAeropuertoOrigen) {
         if (listaVuelos.cantElementos() == 0) {
             return false;
         }
         for (int i = 1; i <= listaVuelos.cantElementos(); i++) {
-            Vuelo vuelo = listaVuelos.obtenerElemento(new Vuelo(codigoAeropuertoDestino, codigoAeropuertoOrigen, codigoAerolinea));
+            Vuelo vuelo = listaVuelos.obtenerElemento(new Vuelo(codigoAeropuertoDestino, codigoAeropuertoOrigen, codigoAerolinea), Comparator.comparing((Vuelo v) -> v.getCodigoAerolinea()));
             if (vuelo == null)
                 return false;
-            if (!vuelo.getCodigoAerolinea().equals(codigoAerolinea)) {
-                return false;
+            if (vuelo.getCodigoAerolinea().equals(codigoAerolinea)) {
+                return true;
             }
         }
         return true;
