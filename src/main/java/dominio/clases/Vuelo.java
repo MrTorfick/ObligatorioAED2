@@ -115,6 +115,7 @@ public class Vuelo {
         this.codigoAerolinea = codigoAerolinea;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

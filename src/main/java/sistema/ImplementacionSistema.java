@@ -13,9 +13,9 @@ public class ImplementacionSistema implements Sistema {
     int maxAerolineas = 0;
 
     ABBGeneric3<Pasajero> arbolPasajerosGeneral = new ABBGeneric3<>((p1, p2) -> {
-        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));//Cualquier caracter que no este entre 0-9, eliminado
+        int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
         int cedula2 = Integer.parseInt(p2.getCedula().replaceAll("[^0-9]", ""));
-        return Integer.compare(cedula1, cedula2);//Si cedula1 es mayor que cedula2, devuelve 1, si es menor devuelve -1, si son iguales devuelve 0
+        return Integer.compare(cedula1, cedula2);
     });
     ABBGeneric3<Pasajero> arbolPasajerosCategoriaPlatino = new ABBGeneric3<>((p1, p2) -> {
         int cedula1 = Integer.parseInt(p1.getCedula().replaceAll("[^0-9]", ""));
@@ -79,7 +79,7 @@ public class ImplementacionSistema implements Sistema {
             if (arbolPasajerosGeneral.existe(p))
                 return Retorno.error3("Ya existe un pasajero registrado con esa cedula");
 
-            arbolPasajerosGeneral.agregar(p);//Puede tirar excepcion
+            arbolPasajerosGeneral.agregar(p);
             switch (categoria.getIndice()) {
                 case 0:
                     arbolPasajerosCategoriaPlatino.agregar(p);
@@ -172,7 +172,6 @@ public class ImplementacionSistema implements Sistema {
 
     @Override
     public Retorno listarAerolineasDescendente() {
-        //System.out.println(arbolAerolineasGeneral.toUrl());
         String lista = arbolAerolineasGeneral.invertedInOrder();
         return Retorno.ok(lista);
     }
@@ -274,8 +273,6 @@ public class ImplementacionSistema implements Sistema {
             return Retorno.error3("Ya existe una aerolinea con ese codigo");
         }
         String lista = grafoConexionAeropuertos.Bfs(new Aeropuerto(codigoAeropuertoOrigen), cantidad, codigoAerolinea);
-        //System.out.println(lista);
-        // System.out.println(grafoConexionAeropuertos.toUrl());
         return Retorno.ok(lista);
     }
 

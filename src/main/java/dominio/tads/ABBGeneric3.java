@@ -67,33 +67,6 @@ public class ABBGeneric3<T> {
         }
     }
 
-    /*
-    public T obtener(T cascaron) {
-        return obtener(raiz, cascaron);
-    }
-
-    private T obtener(NodoABBGeneric nodo, T datoBuscar) {
-        if (nodo == null) return null;
-        else if (datoBuscar.equals(nodo.dato)) return nodo.dato;
-        else if (comparador.compare(datoBuscar, nodo.dato) > 0) return obtener(nodo.der, datoBuscar);
-        else return obtener(nodo.izq, datoBuscar);
-    }
-    */
-
-    /*
-    public void imprimirOrdenado() {
-        imprimirOrdenado(raiz);
-    }
-
-    private void imprimirOrdenado(NodoABBGeneric nodo) {
-        if (nodo == null) return;
-        imprimirOrdenado(nodo.izq);
-        System.out.print(nodo.dato);
-        System.out.print(",");
-        imprimirOrdenado(nodo.der);
-    }
-     */
-
 
     public int cantNodos() {
         return cantNodosRec(raiz);
@@ -125,47 +98,39 @@ public class ABBGeneric3<T> {
     }
 
 
-
-
-
-    public String inOrder(){
+    public String inOrder() {
         StringBuilder sb = new StringBuilder();
         inOrderRec(raiz, sb);
-        if(!sb.isEmpty()){
-            sb.deleteCharAt(sb.length()-1);//Quitar barra final
+        if (!sb.isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
     }
 
     private void inOrderRec(NodoABBGeneric nodoActual, StringBuilder sb) {
-        if(nodoActual !=null){
-            inOrderRec(nodoActual.izq,sb);
+        if (nodoActual != null) {
+            inOrderRec(nodoActual.izq, sb);
             sb.append(nodoActual.dato.toString()).append("|");
-            //System.out.printf("%s", nodoActual.dato.);
             inOrderRec(nodoActual.der, sb);
         }
     }
 
-    public String invertedInOrder(){
+    public String invertedInOrder() {
         StringBuilder sb = new StringBuilder();
         invertedInOrderRec(raiz, sb);
-        if(!sb.isEmpty()){
-            sb.deleteCharAt(sb.length()-1);
+        if (!sb.isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
     }
 
     private void invertedInOrderRec(NodoABBGeneric nodoActual, StringBuilder sb) {
-        if(nodoActual !=null){
-            invertedInOrderRec(nodoActual.der,sb);
+        if (nodoActual != null) {
+            invertedInOrderRec(nodoActual.der, sb);
             sb.append(nodoActual.dato.toString()).append("|");
             invertedInOrderRec(nodoActual.izq, sb);
         }
     }
-
-
-
-
 
 
 }

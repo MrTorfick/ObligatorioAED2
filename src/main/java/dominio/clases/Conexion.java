@@ -42,8 +42,7 @@ public class Conexion {
     }
 
     public Conexion(double kilometros) {
-        //this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
-        //this.codigoAeropuertoDestino = codigoAeropuertoDestino;
+
         this.kilometros = kilometros;
     }
 
@@ -51,23 +50,6 @@ public class Conexion {
         this.kilometros = kilometros;
         this.listaVuelos = listaVuelos;
     }
-    /*
-    public String getCodigoAeropuertoOrigen() {
-        return codigoAeropuertoOrigen;
-    }
-
-    public void setCodigoAeropuertoOrigen(String codigoAeropuertoOrigen) {
-        this.codigoAeropuertoOrigen = codigoAeropuertoOrigen;
-    }
-
-    public String getCodigoAeropuertoDestino() {
-        return codigoAeropuertoDestino;
-    }
-
-    public void setCodigoAeropuertoDestino(String codigoAeropuertoDestino) {
-        this.codigoAeropuertoDestino = codigoAeropuertoDestino;
-    }
-    */
 
 
     public double getKilometros() {

@@ -34,8 +34,8 @@ public class GrafoConexion {
     }
 
     public boolean sonAdyacentes(Aeropuerto origen, Aeropuerto destino) {
-        int idxOrigen = this.buscarIndiceVertice(origen);//fila
-        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        int idxOrigen = this.buscarIndiceVertice(origen);
+        int idxDestino = this.buscarIndiceVertice(destino);
         if (idxOrigen < 0 || idxDestino < 0) {
             return false;
         }
@@ -48,8 +48,8 @@ public class GrafoConexion {
     }
 
     public boolean existeVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo) {
-        int idxOrigen = this.buscarIndiceVertice(origen);//fila
-        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        int idxOrigen = this.buscarIndiceVertice(origen);
+        int idxDestino = this.buscarIndiceVertice(destino);
         if (idxOrigen < 0 || idxDestino < 0) {
             return false;
         }
@@ -64,8 +64,8 @@ public class GrafoConexion {
     }
 
     public void agregarVuelo(Aeropuerto origen, Aeropuerto destino, Vuelo vuelo) {
-        int idxOrigen = this.buscarIndiceVertice(origen);//fila
-        int idxDestino = this.buscarIndiceVertice(destino);//columno
+        int idxOrigen = this.buscarIndiceVertice(origen);
+        int idxDestino = this.buscarIndiceVertice(destino);
         aristas[idxOrigen][idxDestino].getDatoConexion().getListaVuelos().agregarFinal(vuelo);
     }
 
@@ -131,8 +131,7 @@ public class GrafoConexion {
             int nivelDelVerticeAExplorar = infoAVisitar.cantSaltos;
             if (!visitados[idxAVisitar]) {
                 if (nivelDelVerticeAExplorar <= cantidadMaximaEscalas) {
-                    listaAeropuertos.agregar(vertices[idxAVisitar]);//esto es el lo imprimo
-                    //System.out.println(vertices[idxAVisitar] + "(idxVertice:" + idxAVisitar + ", cantidadSaltos:" + nivelDelVerticeAExplorar + ")"); //TODO
+                    listaAeropuertos.agregar(vertices[idxAVisitar]);
                     visitados[idxAVisitar] = true;
                 } else {
                     break;
